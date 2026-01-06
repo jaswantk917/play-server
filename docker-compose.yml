@@ -1,0 +1,8 @@
+version: "3"
+services:
+  play-server:
+    build: .
+    container_name: play-server
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
