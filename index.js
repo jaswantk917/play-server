@@ -45,6 +45,21 @@ app.post("/tasks", async (req, res) => {
   }
 });
 
+//patch to update isCompleted
+app.patch("/tasks/:id", async (req, res) => {
+  try {
+    const updatedTask = await Task.findByIdAndUpdate(
+      req.params.id,
+      { isCompleted: req.body.isCompleted },
+      { new: true },
+    );
+    res.status(200).json(updatedTask);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err });
+  }
+});
+
 app.get("/tasks", async (req, res) => {
   try {
     const tasks = await Task.find();
