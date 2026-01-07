@@ -4,7 +4,30 @@ const app = express();
 const port = process.env.PORT ?? 3000;
 const mongoose = require("mongoose");
 const Task = require("./models/Task.js");
+const cors = require("cors");
 
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      const allowedPatterns = [
+        /^http:\/\/localhost:\d+$/, // Any local port
+        /^https:\/\/.*\.bionaraq\.info$/, // Any subdomain of your site
+      ];
+      const isAllowed = allowedPatterns.some((pattern) => pattern.test(origin));
+
+      if (isAllowed) {
+        callback(null, true);
+      } else {
+        console.log(`Blocked by CORS: ${origin}`); // Helpful for debugging
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
 app.use(express.json());
 
 app.get("/", (req, res) => {
